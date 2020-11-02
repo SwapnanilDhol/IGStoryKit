@@ -145,7 +145,7 @@ public final class IGDispatcher {
             [[
                 IGStoryDomains.topColor.description: hexTop,
                 IGStoryDomains.bottomColor.description: hexBottom,
-                IGStoryDomains.stickerImage.description: stickerData as Any
+                IGStoryDomains.stickerImage.description: stickerData as Data?
             ]]
 
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
@@ -169,7 +169,7 @@ public final class IGDispatcher {
         let pasteBoardItems =
             [[
                 IGStoryDomains.backgroundImage.description : backgroundImage,
-                IGStoryDomains.stickerImage.description : stickerData as Any
+                IGStoryDomains.stickerImage.description : stickerData as Data?
             ]]
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
         UIPasteboard.general.setItems(pasteBoardItems,
