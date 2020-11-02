@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/SwapnanilDhol/IGStoryKit/blob/main/Resources/IGStoryKitCover.png?raw=true” width=400 />
+  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/IGStoryKitCover.png" width=400 />
 </p>
 ---
 ## Overview
