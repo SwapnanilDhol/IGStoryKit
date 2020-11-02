@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/IGStoryKitCover.png” width=400 />
+  <img src="https://github.com/SwapnanilDhol/IGStoryKit/blob/main/Resources/IGStoryKitCover.png” width=400 />
 </p>
 ---
 ## Overview
@@ -28,12 +28,12 @@ let igData = IGData(backgroundType: .gradient,
 
 Next, create an instance of `IGDispatcher` and initialize it with the `igData` created above.
 
-### Create an instance of  `IGDispatcher`
+#### Create an instance of  `IGDispatcher`
 ```swift 
 let igDispatcher = IGDispatcher(igData: igData)
 ```
 
-### Start the posting flow by called start() on the dispatcher
+#### Start the posting flow by called start() on the dispatcher
 ```swift
 igDispatcher.start()
 ```
@@ -43,8 +43,8 @@ Instagram suggests particular sizes for images shared to Instagram stories on th
 
 | Asset            | Preferred Size          | For BackgroundType               |
 |------------------|-------------------------|----------------------------------|
-| Content Sticker  | 640x480                 | .none, .color, .gradient, .image |
-| Background Image | 720x1080 (9:16 or 9:18) | .image                           |
+| Content Sticker  | 640x480                 | `.none`, `.color`, `.gradient`, `.image` |
+| Background Image | 720x1080 (9:16 or 9:18) | `.image`                           |
 
 ## Understanding how IGKit works 
 ### IGData 
