@@ -141,17 +141,30 @@ public final class IGDispatcher {
             return
         }
 
-        let pasteBoardItems =
-            [[
-                IGStoryDomains.topColor.description: hexTop,
-                IGStoryDomains.bottomColor.description: hexBottom,
-                IGStoryDomains.stickerImage.description: stickerData as Data?
-            ]]
+        if let stickerData = stickerData {
+            let pasteBoardItems =
+                [[
+                    IGStoryDomains.topColor.description: hexTop,
+                    IGStoryDomains.bottomColor.description: hexBottom,
+                    IGStoryDomains.stickerImage.description: stickerData
+                ]]
 
-        let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteBoardItems,
-                                      options: pasteboardOptions)
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems(pasteBoardItems,
+                                          options: pasteboardOptions)
+        } else {
+            let pasteBoardItems =
+                [[
+                    IGStoryDomains.topColor.description: hexTop,
+                    IGStoryDomains.bottomColor.description: hexBottom,
+                ]]
+
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems(pasteBoardItems,
+                                          options: pasteboardOptions)
+        }
         UIApplication.shared.open(urlScheme)
+
     }
 
     /// Post Sticker along with a Image as the background
@@ -166,14 +179,24 @@ public final class IGDispatcher {
             return
         }
 
-        let pasteBoardItems =
-            [[
-                IGStoryDomains.backgroundImage.description : backgroundImage,
-                IGStoryDomains.stickerImage.description : stickerData as Data?
-            ]]
-        let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteBoardItems,
-                                      options: pasteboardOptions)
+        if let stickerData = stickerData {
+            let pasteBoardItems =
+                [[
+                    IGStoryDomains.backgroundImage.description: backgroundImage,
+                    IGStoryDomains.stickerImage.description: stickerData
+                ]]
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems(pasteBoardItems,
+                                          options: pasteboardOptions)
+        } else {
+            let pasteBoardItems =
+                [[
+                    IGStoryDomains.backgroundImage.description : backgroundImage
+                ]]
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems(pasteBoardItems,
+                                          options: pasteboardOptions)
+        }
         UIApplication.shared.open(urlScheme)
     }
 }
