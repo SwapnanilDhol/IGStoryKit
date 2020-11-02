@@ -1,7 +1,7 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/IGStoryKitCover.png" width=400 />
+  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/IGStoryKitCover.png" width=600 />
 </p>
----
+
 ## Overview
 `IGStoryKit ` lets you easily share content stickers with different background types to Instagram stories from your iOS and iPadOS apps.
 
