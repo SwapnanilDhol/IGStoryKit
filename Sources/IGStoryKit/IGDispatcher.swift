@@ -30,51 +30,79 @@ public final class IGDispatcher {
             assertionFailure("Instagram Dispatcher: No Data Provided")
             return
         }
-        guard let contentSticker = igData.contentSticker else {
-            assertionFailure("Instagram Dispatcher: Content Sticker Not found")
-            return
-        }
 
         switch igData.backgroundType {
 
         case .none:
+
+            guard let contentSticker = igData.contentSticker else {
+                assertionFailure("IGDispatcher: No Content Sticker provided for None BackgroundType")
+                return
+            }
+
             if let stickerData = contentSticker.pngData() {
                 postOnlyStickerToInstagram(stickerData: stickerData)
             }
 
         case .color:
 
-            guard var hexTop = igData.colorTop?.toHex else { return }
+            guard var hexTop = igData.colorTop?.toHex else {
+                assertionFailure("IGDispatcher: Color not provided for a Color BackgroundType")
+                return
+            }
 
             if !hexTop.contains("#") { hexTop = "#" + hexTop }
-            if let stickerData = contentSticker.pngData() {
+
+            if let stickerData = igData.contentSticker?.pngData() {
                 postToInstagramWithColors(hexTop: hexTop,
                                           hexBottom: hexTop,
                                           stickerData: stickerData)
+            } else {
+                postToInstagramWithColors(hexTop: hexTop,
+                                          hexBottom: hexTop,
+                                          stickerData: nil)
             }
 
         case .gradient:
 
             guard var hexTop = igData.colorTop?.toHex,
-                  var hexBottom = igData.colorBottom?.toHex else { return }
+                  var hexBottom = igData.colorBottom?.toHex else {
+                assertionFailure("IGDispatcher: Two colors not provided for a Gradient BackgroundType.")
+                return
+            }
 
             if !hexTop.contains("#") { hexTop = "#" + hexTop }
             if !hexBottom.contains("#") { hexBottom = "#" + hexBottom }
-            if let stickerData = contentSticker.pngData() {
+
+            if let stickerData = igData.contentSticker?.pngData() {
                 postToInstagramWithColors(hexTop: hexTop,
                                           hexBottom: hexBottom,
                                           stickerData: stickerData)
+            } else {
+                postToInstagramWithColors(hexTop: hexTop,
+                                          hexBottom: hexBottom,
+                                          stickerData: nil)
             }
 
         case .image:
 
-            guard let backgroundImage = igData.backgroundImage else { return }
+            guard let backgroundImage = igData.backgroundImage else {
+                assertionFailure("IGDispatcher: Image not provided for Image BackgroundType.")
+                return
+            }
 
-            if let stickerData = contentSticker.pngData(),
-               let backgroundImageData = backgroundImage.pngData() {
+            guard let backgroundImageData = backgroundImage.pngData() else {
+                return
+            }
+
+            if let stickerData = igData.contentSticker?.pngData() {
                 postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
                                                    stickerData: stickerData)
+            } else {
+                postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
+                                                   stickerData: nil)
             }
+
         }
     }
 
@@ -105,7 +133,7 @@ public final class IGDispatcher {
     ///   - stickerData: Image data for sticker
     private func postToInstagramWithColors (hexTop: String,
                                             hexBottom: String,
-                                            stickerData: Data) {
+                                            stickerData: Data?) {
 
         guard let urlScheme = URL(string: storyURL),
               UIApplication.shared.canOpenURL(urlScheme) else {
@@ -117,7 +145,7 @@ public final class IGDispatcher {
             [[
                 IGStoryDomains.topColor.description: hexTop,
                 IGStoryDomains.bottomColor.description: hexBottom,
-                IGStoryDomains.stickerImage.description: stickerData
+                IGStoryDomains.stickerImage.description: stickerData as Any
             ]]
 
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
@@ -131,7 +159,7 @@ public final class IGDispatcher {
     ///   - backgroundImage: Image that goes behind the sticker
     ///   - stickerData: Image data for sticker
     private func postToInstagramWithImageBackground (backgroundImage: Data,
-                                                     stickerData: Data) {
+                                                     stickerData: Data?) {
         guard let urlScheme = URL(string: storyURL),
               UIApplication.shared.canOpenURL(urlScheme) else {
             assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
@@ -141,10 +169,11 @@ public final class IGDispatcher {
         let pasteBoardItems =
             [[
                 IGStoryDomains.backgroundImage.description : backgroundImage,
-                IGStoryDomains.stickerImage.description : stickerData
+                IGStoryDomains.stickerImage.description : stickerData as Any
             ]]
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteBoardItems, options: pasteboardOptions)
+        UIPasteboard.general.setItems(pasteBoardItems,
+                                      options: pasteboardOptions)
         UIApplication.shared.open(urlScheme)
     }
 }
