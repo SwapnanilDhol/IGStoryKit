@@ -17,6 +17,11 @@ You can find a detailed tutorial here. However, a simple setup is mentioned belo
 
 > Please ensure that you’ve created a `LSApplicationQueriesSchemes` entry in your project’s Info.plist file and added an `instagram-stories` entry. Without this your project will not be able to copy data into Instagram stories and this framework will thrown an assertion failure during debug runtime. 
 
+#### Import IGStoryKit
+```swift
+import IGStoryKit
+```
+
 #### Create an `IGData` object
 ```swift
 let igData = IGData(backgroundType: .gradient,
