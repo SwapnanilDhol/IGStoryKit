@@ -13,7 +13,7 @@ https://github.com/SwapnanilDhol/IGStoryKit
 ```
 
 ## Usage 
-You can find a detailed tutorial here. However, a simple setup is mentioned below.
+You can find a detailed tutorial [here](https://swapnanildhol.medium.com/igstorykit-97c670986d08). However, a simple setup is mentioned below.
 
 > Please ensure that you’ve created a `LSApplicationQueriesSchemes` entry in your project’s Info.plist file and added an `instagram-stories` entry. Without this your project will not be able to copy data into Instagram stories and this framework will thrown an assertion failure during debug runtime. 
 
