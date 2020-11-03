@@ -9,7 +9,7 @@
 `IGStoryKit` is available via [Swift Package Manager](https://swift.org/package-manager/). To add `IGStoryKit` simply add this repo’s URL to your project’s package file. 
 
 ```
-https://github.com/SwapnanilDhol/igstorykit
+https://github.com/SwapnanilDhol/IGStoryKit
 ```
 
 ## Usage 
@@ -88,7 +88,7 @@ Contributions are always welcome. Please follow the following convention if you�
 * For issue fixes: #IssueNumber NameOfFile: ChangesMade
 
 ## License
-This project is licensed under the MIT License - see the  [LICENSE](https://github.com/)  file for details
+This project is licensed under the MIT License - see the  [LICENSE](https://github.com/SwapnanilDhol/IGStoryKit/blob/main/Resources/LICENSE.md)  file for details
 
 ## Apps using IGStoryKit 
 * [Neon: Color Picker & Social](https://apps.apple.com/us/app/neon-real-time-color-picker/id1480273650?ls=1)
