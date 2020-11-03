@@ -5,6 +5,10 @@
 ## Overview
 `IGStoryKit` lets you easily share content stickers with different background types to Instagram stories from your iOS and iPadOS apps.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/BackgroundType.png" width=600 />
+</p>
+
 ## Installation 
 `IGStoryKit` is available via [Swift Package Manager](https://swift.org/package-manager/). To add `IGStoryKit` simply add this repo’s URL to your project’s package file. 
 
@@ -77,7 +81,7 @@ Instagram suggests particular sizes for images shared to Instagram stories on th
 * `image`: An image background. User provides an `UIImage` into the `backgroundImage` parameter while creating an object of type `IGData`. The `IGDispatcher` class then creates an Instagram story with an image background. For this case, the user may or may not provide a sticker content image. In case the user doesn’t provide a sticker content image `IGDispatcher` will only create a story with an image background.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/BackgroundType.PNG" width=600 />
+  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/IGSKExample.png" width=600 />
 </p>
 
 ## Like the framework?
