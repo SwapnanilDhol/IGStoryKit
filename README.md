@@ -6,7 +6,7 @@
 `IGStoryKit` lets you easily share content stickers with different background types to Instagram stories from your iOS and iPadOS apps.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/BackgroundType.png" width=600 />
+  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/BackgroundType.PNG" width=600 />
 </p>
 
 ## Installation 
