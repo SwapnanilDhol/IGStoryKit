@@ -101,5 +101,6 @@ This project is licensed under the MIT License - see the  [LICENSE](https://gith
 ## Apps using IGStoryKit 
 * [Neon: Color Picker & Social](https://apps.apple.com/us/app/neon-real-time-color-picker/id1480273650?ls=1)
 * [Sticker Card](https://apps.apple.com/us/app/sticker-cards/id1522226018)
+* [LinkSum](https://apps.apple.com/in/app/linksum/id1500146123)
 
 If you’re using IGStoryKit in your app please open a PR to edit this Readme. I’ll be happy to include you in this list :D 
