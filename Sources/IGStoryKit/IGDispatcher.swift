@@ -11,6 +11,7 @@
 
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 public final class IGDispatcher {
 
     private var igData: IGData?
