@@ -18,20 +18,22 @@ enum IGStoryDomains: CustomStringConvertible {
     case bottomColor
     case backgroundImage
     case stickerImage
+    case contentURL
 
     public var description: String {
         switch self {
-        case .storyURL:
-            return "instagram-stories://share"
-        case .topColor:
-            return "com.instagram.sharedSticker.backgroundTopColor"
-        case .bottomColor:
-            return "com.instagram.sharedSticker.backgroundBottomColor"
-        case .backgroundImage:
-            return "com.instagram.sharedSticker.backgroundImage"
-        case .stickerImage:
-            return "com.instagram.sharedSticker.stickerImage"
-
+            case .storyURL:
+                return "instagram-stories://share"
+            case .topColor:
+                return "com.instagram.sharedSticker.backgroundTopColor"
+            case .bottomColor:
+                return "com.instagram.sharedSticker.backgroundBottomColor"
+            case .backgroundImage:
+                return "com.instagram.sharedSticker.backgroundImage"
+            case .stickerImage:
+                return "com.instagram.sharedSticker.stickerImage"
+            case .contentURL:
+                return "com.instagram.sharedSticker.contentURL"
         }
     }
 }

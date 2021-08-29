@@ -42,7 +42,7 @@ public final class IGDispatcher {
             }
 
             if let stickerData = contentSticker.pngData() {
-                postOnlyStickerToInstagram(stickerData: stickerData)
+                postOnlyStickerToInstagram(stickerData: stickerData, contentURL: igData.contentURL)
             }
 
         case .color:
@@ -55,13 +55,9 @@ public final class IGDispatcher {
             if !hexTop.contains("#") { hexTop = "#" + hexTop }
 
             if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexTop,
-                                          stickerData: stickerData)
+                postToInstagramWithColors(hexTop: hexTop, hexBottom: hexTop, stickerData: stickerData, contentURL: igData.contentURL)
             } else {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexTop,
-                                          stickerData: nil)
+                postToInstagramWithColors(hexTop: hexTop, hexBottom: hexTop, stickerData: nil, contentURL: igData.contentURL)
             }
 
         case .gradient:
@@ -76,13 +72,9 @@ public final class IGDispatcher {
             if !hexBottom.contains("#") { hexBottom = "#" + hexBottom }
 
             if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexBottom,
-                                          stickerData: stickerData)
+                postToInstagramWithColors(hexTop: hexTop, hexBottom: hexBottom, stickerData: stickerData, contentURL: igData.contentURL)
             } else {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexBottom,
-                                          stickerData: nil)
+                postToInstagramWithColors(hexTop: hexTop, hexBottom: hexBottom, stickerData: nil, contentURL: igData.contentURL)
             }
 
         case .image:
@@ -97,11 +89,9 @@ public final class IGDispatcher {
             }
 
             if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
-                                                   stickerData: stickerData)
+                postToInstagramWithImageBackground(backgroundImage: backgroundImageData, stickerData: stickerData, contentURL: igData.contentURL)
             } else {
-                postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
-                                                   stickerData: nil)
+                postToInstagramWithImageBackground(backgroundImage: backgroundImageData, stickerData: nil, contentURL: igData.contentURL)
             }
 
         }
@@ -109,7 +99,7 @@ public final class IGDispatcher {
 
     /// Post only Sticker to Instagram. No Background Included
     /// - Parameter stickerData: Image Data for Sticker
-    private func postOnlyStickerToInstagram(stickerData: Data) {
+    private func postOnlyStickerToInstagram(stickerData: Data, contentURL: String = "") {
         guard let urlScheme = URL(string: storyURL),
               UIApplication.shared.canOpenURL(urlScheme) else {
             assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
@@ -118,12 +108,12 @@ public final class IGDispatcher {
 
         let pasteBoardItems =
             [[
-              IGStoryDomains.stickerImage.description: stickerData
+              IGStoryDomains.stickerImage.description: stickerData,
+              IGStoryDomains.contentURL.description: contentURL
             ]]
 
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteBoardItems,
-                                      options: pasteboardOptions)
+        UIPasteboard.general.setItems(pasteBoardItems, options: pasteboardOptions)
         UIApplication.shared.open(urlScheme)
     }
 
@@ -134,7 +124,8 @@ public final class IGDispatcher {
     ///   - stickerData: Image data for sticker
     private func postToInstagramWithColors (hexTop: String,
                                             hexBottom: String,
-                                            stickerData: Data?) {
+                                            stickerData: Data?,
+                                            contentURL: String = "") {
 
         guard let urlScheme = URL(string: storyURL),
               UIApplication.shared.canOpenURL(urlScheme) else {
@@ -147,7 +138,8 @@ public final class IGDispatcher {
                 [[
                     IGStoryDomains.topColor.description: hexTop,
                     IGStoryDomains.bottomColor.description: hexBottom,
-                    IGStoryDomains.stickerImage.description: stickerData
+                    IGStoryDomains.stickerImage.description: stickerData,
+                    IGStoryDomains.contentURL.description: contentURL
                 ]]
 
             let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
@@ -158,6 +150,7 @@ public final class IGDispatcher {
                 [[
                     IGStoryDomains.topColor.description: hexTop,
                     IGStoryDomains.bottomColor.description: hexBottom,
+                    IGStoryDomains.contentURL.description: contentURL
                 ]]
 
             let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
@@ -173,7 +166,8 @@ public final class IGDispatcher {
     ///   - backgroundImage: Image that goes behind the sticker
     ///   - stickerData: Image data for sticker
     private func postToInstagramWithImageBackground (backgroundImage: Data,
-                                                     stickerData: Data?) {
+                                                     stickerData: Data?,
+                                                     contentURL: String = "") {
         guard let urlScheme = URL(string: storyURL),
               UIApplication.shared.canOpenURL(urlScheme) else {
             assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
@@ -184,19 +178,19 @@ public final class IGDispatcher {
             let pasteBoardItems =
                 [[
                     IGStoryDomains.backgroundImage.description: backgroundImage,
-                    IGStoryDomains.stickerImage.description: stickerData
+                    IGStoryDomains.stickerImage.description: stickerData,
+                    IGStoryDomains.contentURL.description: contentURL
                 ]]
             let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
+            UIPasteboard.general.setItems(pasteBoardItems, options: pasteboardOptions)
         } else {
             let pasteBoardItems =
                 [[
-                    IGStoryDomains.backgroundImage.description : backgroundImage
+                    IGStoryDomains.backgroundImage.description: backgroundImage,
+                    IGStoryDomains.contentURL.description: contentURL
                 ]]
             let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
+            UIPasteboard.general.setItems(pasteBoardItems, options: pasteboardOptions)
         }
         UIApplication.shared.open(urlScheme)
     }
