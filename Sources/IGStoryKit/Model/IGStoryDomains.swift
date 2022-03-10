@@ -11,18 +11,15 @@
 
 import Foundation
 
-enum IGStoryDomains: CustomStringConvertible {
+enum IGStoryDomain {
 
-    case storyURL
     case topColor
     case bottomColor
     case backgroundImage
     case stickerImage
 
-    public var description: String {
+    public var path: String {
         switch self {
-        case .storyURL:
-            return "instagram-stories://share"
         case .topColor:
             return "com.instagram.sharedSticker.backgroundTopColor"
         case .bottomColor:
@@ -31,7 +28,6 @@ enum IGStoryDomains: CustomStringConvertible {
             return "com.instagram.sharedSticker.backgroundImage"
         case .stickerImage:
             return "com.instagram.sharedSticker.stickerImage"
-
         }
     }
 }

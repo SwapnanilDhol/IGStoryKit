@@ -26,17 +26,17 @@ public struct IGData {
     ///   - colorBottom: UIColor off the bottom color. In case of a solid color, these two values will be the same.
     ///   - backgroundImage: UIImage of the background Image to be shared
     ///   - contentSticker: UIImage of the Content Sticker to be shared.
-    public init(backgroundType: BackgroundType,
-                colorTop: UIColor?,
-                colorBottom: UIColor?,
-                backgroundImage: UIImage?,
-                contentSticker: UIImage?) {
-
+    public init(
+        backgroundType: BackgroundType,
+        colorTop: UIColor?,
+        colorBottom: UIColor?,
+        backgroundImage: UIImage?,
+        contentSticker: UIImage?
+    ) {
         self.backgroundType = backgroundType
         self.colorTop = colorTop
         self.colorBottom = colorBottom
         self.backgroundImage = backgroundImage
         self.contentSticker = contentSticker
-
     }
 }
