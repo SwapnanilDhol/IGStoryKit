@@ -33,12 +33,10 @@ public struct IGData {
         backgroundImage: UIImage?,
         contentSticker: UIImage?
     ) {
-
         self.backgroundType = backgroundType
         self.colorTop = colorTop
         self.colorBottom = colorBottom
         self.backgroundImage = backgroundImage
         self.contentSticker = contentSticker
-
     }
 }

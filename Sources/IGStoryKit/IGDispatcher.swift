@@ -22,9 +22,13 @@ public final class IGDispatcher {
         self.igData = igData
     }
 
+    // MARK: - Start
+
     public func start() {
         postToInstagramStories(data: igData)
     }
+
+    // MARK: - Helper Methods
 
     private func postToInstagramStories(data: IGData) {
         guard UIApplication.shared.canOpenURL(Link.storyDeepLink.url) else {
@@ -35,7 +39,7 @@ public final class IGDispatcher {
             )
             alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
                 DispatchQueue.main.async {
-                    UIApplication.shared.open(.init(string: "https://apps.apple.com/in/app/instagram/id389801252")!)
+                    UIApplication.shared.open(Link.instagramAppURL.url)
                 }
             }))
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))

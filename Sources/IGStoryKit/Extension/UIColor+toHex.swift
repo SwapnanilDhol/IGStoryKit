@@ -1,9 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Swapnanil Dhol on 11/2/20.
-//
+/*****************************************************************************
+ * UIColor+toHex.swift
+ * IGStoryKit
+ *****************************************************************************
+ * Copyright (c) 2020 Swapnanil Dhol. All rights reserved.
+ *
+ * Authors: Swapnanil Dhol <swapnanildhol # gmail.com>
+ *
+ * Refer to the COPYING file of the official project for license.
+ *****************************************************************************/
 
 import UIKit
 
