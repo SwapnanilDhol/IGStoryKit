@@ -1,9 +1,13 @@
-//
-//  File.swift
-//  
-//
-//  Created by Swapnanil Dhol on 11/2/20.
-//
+/*****************************************************************************
+ * UIColor+toHex.swift
+ * IGStoryKit
+ *****************************************************************************
+ * Copyright (c) 2020 Swapnanil Dhol. All rights reserved.
+ *
+ * Authors: Swapnanil Dhol <swapnanildhol # gmail.com>
+ *
+ * Refer to the COPYING file of the official project for license.
+ *****************************************************************************/
 
 import UIKit
 
@@ -50,19 +54,6 @@ extension UIColor {
     }
 
     var toHex: String? {
-        return toHex()
-    }
-
-    func toHexString() -> String {
-        var r:CGFloat = 0
-        var g:CGFloat = 0
-        var b:CGFloat = 0
-        var a:CGFloat = 0
-
-        getRed(&r, green: &g, blue: &b, alpha: &a)
-
-        let rgb:Int = (Int)(r*255)<<16 | (Int)(g*255)<<8 | (Int)(b*255)<<0
-
-        return String(format:"#%06x", rgb)
+        return "#" + (toHex() ?? "D46F04")
     }
 }
