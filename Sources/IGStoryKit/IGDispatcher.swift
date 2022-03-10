@@ -14,190 +14,65 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 public final class IGDispatcher {
 
-    private var igData: IGData?
-    private let storyURL = IGStoryDomains.storyURL.description
+    private let igData: IGData
+
+    // MARK: - Init
 
     public init(igData: IGData) {
         self.igData = igData
     }
 
     public func start() {
-        shareBackgroundImage(igData: self.igData)
+        postToInstagramStories(data: igData)
     }
 
-    private func shareBackgroundImage(igData: IGData?) {
-
-        guard let igData = igData else {
-            assertionFailure("Instagram Dispatcher: No Data Provided")
+    private func postToInstagramStories(data: IGData) {
+        guard UIApplication.shared.canOpenURL(Link.storyDeepLink.url) else {
+            let alert = UIAlertController(
+                title: "Error",
+                message: "Instagram is not installed on your device. Would you like to install it?",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+                DispatchQueue.main.async {
+                    UIApplication.shared.open(.init(string: "https://apps.apple.com/in/app/instagram/id389801252")!)
+                }
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            DispatchQueue.main.async {
+                UIApplication.topViewController()?.present(alert, animated: true)
+            }
             return
         }
 
-        switch igData.backgroundType {
+        let pasteboardItems: [[String: Any]]
 
+        switch data.backgroundType {
         case .none:
-
-            guard let contentSticker = igData.contentSticker else {
-                assertionFailure("IGDispatcher: No Content Sticker provided for None BackgroundType")
-                return
-            }
-
-            if let stickerData = contentSticker.pngData() {
-                postOnlyStickerToInstagram(stickerData: stickerData)
-            }
-
-        case .color:
-
-            guard var hexTop = igData.colorTop?.toHex else {
-                assertionFailure("IGDispatcher: Color not provided for a Color BackgroundType")
-                return
-            }
-
-            if !hexTop.contains("#") { hexTop = "#" + hexTop }
-
-            if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexTop,
-                                          stickerData: stickerData)
-            } else {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexTop,
-                                          stickerData: nil)
-            }
-
-        case .gradient:
-
-            guard var hexTop = igData.colorTop?.toHex,
-                  var hexBottom = igData.colorBottom?.toHex else {
-                assertionFailure("IGDispatcher: Two colors not provided for a Gradient BackgroundType.")
-                return
-            }
-
-            if !hexTop.contains("#") { hexTop = "#" + hexTop }
-            if !hexBottom.contains("#") { hexBottom = "#" + hexBottom }
-
-            if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexBottom,
-                                          stickerData: stickerData)
-            } else {
-                postToInstagramWithColors(hexTop: hexTop,
-                                          hexBottom: hexBottom,
-                                          stickerData: nil)
-            }
-
-        case .image:
-
-            guard let backgroundImage = igData.backgroundImage else {
-                assertionFailure("IGDispatcher: Image not provided for Image BackgroundType.")
-                return
-            }
-
-            guard let backgroundImageData = backgroundImage.pngData() else {
-                return
-            }
-
-            if let stickerData = igData.contentSticker?.pngData() {
-                postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
-                                                   stickerData: stickerData)
-            } else {
-                postToInstagramWithImageBackground(backgroundImage: backgroundImageData,
-                                                   stickerData: nil)
-            }
-
-        }
-    }
-
-    /// Post only Sticker to Instagram. No Background Included
-    /// - Parameter stickerData: Image Data for Sticker
-    private func postOnlyStickerToInstagram(stickerData: Data) {
-        guard let urlScheme = URL(string: storyURL),
-              UIApplication.shared.canOpenURL(urlScheme) else {
-            assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
-            return
-        }
-
-        let pasteBoardItems =
-            [[
-              IGStoryDomains.stickerImage.description: stickerData
+            // Just post the sticker data
+            pasteboardItems = [[
+                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data()
             ]]
-
+        case .color:
+            pasteboardItems = [[
+                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.topColor.path: data.colorTop?.toHex ?? "",
+                IGStoryDomain.bottomColor.path: data.colorTop?.toHex ?? "",
+            ]]
+        case .gradient:
+            pasteboardItems = [[
+                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.topColor.path: data.colorTop?.toHex ?? "",
+                IGStoryDomain.bottomColor.path: data.colorBottom?.toHex ?? "",
+            ]]
+        case .image:
+            pasteboardItems = [[
+                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.backgroundImage.path: data.backgroundImage?.pngData() ?? Data()
+            ]]
+        }
         let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteBoardItems,
-                                      options: pasteboardOptions)
-        UIApplication.shared.open(urlScheme)
-    }
-
-    /// Post Sticker Along with a Solid Color / Gradient as the background
-    /// - Parameters:
-    ///   - hexTop: The Color Hex of the top color
-    ///   - hexBottom: The Color Hex of the bottom color
-    ///   - stickerData: Image data for sticker
-    private func postToInstagramWithColors (hexTop: String,
-                                            hexBottom: String,
-                                            stickerData: Data?) {
-
-        guard let urlScheme = URL(string: storyURL),
-              UIApplication.shared.canOpenURL(urlScheme) else {
-            assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
-            return
-        }
-
-        if let stickerData = stickerData {
-            let pasteBoardItems =
-                [[
-                    IGStoryDomains.topColor.description: hexTop,
-                    IGStoryDomains.bottomColor.description: hexBottom,
-                    IGStoryDomains.stickerImage.description: stickerData
-                ]]
-
-            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
-        } else {
-            let pasteBoardItems =
-                [[
-                    IGStoryDomains.topColor.description: hexTop,
-                    IGStoryDomains.bottomColor.description: hexBottom,
-                ]]
-
-            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
-        }
-        UIApplication.shared.open(urlScheme)
-
-    }
-
-    /// Post Sticker along with a Image as the background
-    /// - Parameters:
-    ///   - backgroundImage: Image that goes behind the sticker
-    ///   - stickerData: Image data for sticker
-    private func postToInstagramWithImageBackground (backgroundImage: Data,
-                                                     stickerData: Data?) {
-        guard let urlScheme = URL(string: storyURL),
-              UIApplication.shared.canOpenURL(urlScheme) else {
-            assertionFailure("Instagram Dispatcher: Unable to open Instagram. Please check if the app is installed on this device and the Info.plist file contains a LSApplicationQueriesSchemes key with instagram-stories as one of its entries.")
-            return
-        }
-
-        if let stickerData = stickerData {
-            let pasteBoardItems =
-                [[
-                    IGStoryDomains.backgroundImage.description: backgroundImage,
-                    IGStoryDomains.stickerImage.description: stickerData
-                ]]
-            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
-        } else {
-            let pasteBoardItems =
-                [[
-                    IGStoryDomains.backgroundImage.description : backgroundImage
-                ]]
-            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-            UIPasteboard.general.setItems(pasteBoardItems,
-                                          options: pasteboardOptions)
-        }
-        UIApplication.shared.open(urlScheme)
+        UIPasteboard.general.setItems(pasteboardItems, options: pasteboardOptions)
+        UIApplication.shared.open(Link.storyDeepLink.url)
     }
 }
