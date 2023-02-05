@@ -14,34 +14,31 @@ import UIKit
 @available(iOSApplicationExtension, unavailable)
 public final class IGDispatcher {
 
-    private let igData: IGData
+    private let story: IGStory
 
     // MARK: - Init
-
-    public init(igData: IGData) {
-        self.igData = igData
+    public init(story: IGStory) {
+        self.story = story
     }
 
     // MARK: - Start
-
     public func start() {
-        postToInstagramStories(data: igData)
+        postToInstagramStory(story: story)
     }
 
     // MARK: - Helper Methods
-
-    private func postToInstagramStories(data: IGData) {
+    private func postToInstagramStory(story: IGStory) {
         guard UIApplication.shared.canOpenURL(Link.storyDeepLink.url) else {
             let alert = UIAlertController(
                 title: "Error",
                 message: "Instagram is not installed on your device. Would you like to install it?",
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in
+            alert.addAction(UIAlertAction(title: "Yes", style: .default) { _ in
                 DispatchQueue.main.async {
                     UIApplication.shared.open(Link.instagramAppURL.url)
                 }
-            }))
+            })
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             DispatchQueue.main.async {
                 UIApplication.topViewController()?.present(alert, animated: true)
@@ -50,33 +47,33 @@ public final class IGDispatcher {
         }
 
         let pasteboardItems: [[String: Any]]
-
-        switch data.backgroundType {
+        switch story.background {
         case .none:
-            // Just post the sticker data
             pasteboardItems = [[
-                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data()
+                IGStoryDomain.stickerImage.path: story.contentSticker?.pngData() ?? Data()
             ]]
-        case .color:
+        case let .color(color):
             pasteboardItems = [[
-                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
-                IGStoryDomain.topColor.path: data.colorTop?.toHex ?? "",
-                IGStoryDomain.bottomColor.path: data.colorTop?.toHex ?? "",
+                IGStoryDomain.stickerImage.path: story.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.topColor.path: color.toHex ?? "",
+                IGStoryDomain.bottomColor.path: color.toHex ?? "",
             ]]
-        case .gradient:
+        case let .gradient(colorTop, colorBottom):
             pasteboardItems = [[
-                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
-                IGStoryDomain.topColor.path: data.colorTop?.toHex ?? "",
-                IGStoryDomain.bottomColor.path: data.colorBottom?.toHex ?? "",
+                IGStoryDomain.stickerImage.path: story.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.topColor.path: colorTop.toHex ?? "",
+                IGStoryDomain.bottomColor.path: colorBottom.toHex ?? "",
             ]]
-        case .image:
+        case let .image(image):
             pasteboardItems = [[
-                IGStoryDomain.stickerImage.path: data.contentSticker?.pngData() ?? Data(),
-                IGStoryDomain.backgroundImage.path: data.backgroundImage?.pngData() ?? Data()
+                IGStoryDomain.stickerImage.path: story.contentSticker?.pngData() ?? Data(),
+                IGStoryDomain.backgroundImage.path: image.pngData() ?? Data()
             ]]
         }
-        let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
-        UIPasteboard.general.setItems(pasteboardItems, options: pasteboardOptions)
-        UIApplication.shared.open(Link.storyDeepLink.url)
+        DispatchQueue.main.async {
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            UIPasteboard.general.setItems(pasteboardItems, options: pasteboardOptions)
+            UIApplication.shared.open(Link.storyDeepLink.url)
+        }
     }
 }
