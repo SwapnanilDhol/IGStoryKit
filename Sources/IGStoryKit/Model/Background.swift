@@ -1,5 +1,5 @@
 /*****************************************************************************
- * BackgroundType.swift
+ * Background.swift
  * IGStoryKit
  *****************************************************************************
  * Copyright (c) 2020 Swapnanil Dhol. All rights reserved.
@@ -9,12 +9,16 @@
  * Refer to the COPYING file of the official project for license.
  *****************************************************************************/
 
-import Foundation
+import UIKit
 
-/// Instagram Story Background type: None, Color, Gradient or Image
-public enum BackgroundType {
+/// The background type you'd like for your story
+public enum Background {
+    /// Post the content sitcker with no background
     case none
-    case color
-    case gradient
-    case image
+    /// Add a solid color background
+    case color(color: UIColor)
+    /// Add a linear gradient (top to bottom) background
+    case gradient(colorTop: UIColor, colorBottom: UIColor)
+    /// Add an image as a background
+    case image(image: UIImage)
 }

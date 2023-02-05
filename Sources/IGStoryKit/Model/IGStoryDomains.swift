@@ -12,7 +12,6 @@
 import Foundation
 
 enum IGStoryDomain {
-
     case topColor
     case bottomColor
     case backgroundImage
