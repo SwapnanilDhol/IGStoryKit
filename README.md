@@ -68,7 +68,7 @@ Instagram suggests particular sizes for images shared to Instagram stories on th
 * `.image(image: backgroundImage)`: An image background. User provides an `UIImage` as part of the associated value of this enum case. The `IGDispatcher` class then creates an Instagram story with an image background. For this case, the user may or may not provide a sticker content image. In case the user doesn’t provide a sticker content image `IGDispatcher` will only create a story with an image background.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/SwapnanilDhol/IGStoryKit/main/Resources/ig-story-kit-bg-type.png" width=600 />
+  <img src="https://github.com/SwapnanilDhol/IGStoryKit/blob/main/Resources/ig-story-kit-bg-type.png?raw=true" width=600 />
 </p>
 
 ## Like the framework?
