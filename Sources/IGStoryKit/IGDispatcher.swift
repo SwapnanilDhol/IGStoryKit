@@ -83,15 +83,7 @@ public final class IGDispatcher {
     }
 
     private func createDeeplinkURL() -> URL {
-        var urlComponents = URLComponents()
-        urlComponents.scheme = "instagram-stories"
-        urlComponents.path = "share"
-        urlComponents.queryItems = [
-            URLQueryItem(name: "source_application", value: facebookAppID)
-        ]
-        guard let url = urlComponents.url else {
-            fatalError("IGDispatcher: Failed to create a Deeplink URL")
-        }
-        return url
+        let urlString = Link.storyDeepLink.url.absoluteString + "?source_application=\(facebookAppID)"
+        return URL(string: urlString)!
     }
 }
