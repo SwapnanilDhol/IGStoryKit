@@ -15,10 +15,12 @@ import UIKit
 public final class IGDispatcher {
 
     private let story: IGStory
+    private let facebookAppID: String
 
     // MARK: - Init
-    public init(story: IGStory) {
+    public init(story: IGStory, facebookAppID: String) {
         self.story = story
+        self.facebookAppID = facebookAppID
     }
 
     // MARK: - Start
@@ -70,10 +72,18 @@ public final class IGDispatcher {
                 IGStoryDomain.backgroundImage.path: image.pngData() ?? Data()
             ]]
         }
+
         DispatchQueue.main.async {
-            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [.expirationDate: Date().addingTimeInterval(60 * 5)]
+            let pasteboardOptions: [UIPasteboard.OptionsKey: Any] = [
+                .expirationDate: Date().addingTimeInterval(60 * 5)
+            ]
             UIPasteboard.general.setItems(pasteboardItems, options: pasteboardOptions)
-            UIApplication.shared.open(Link.storyDeepLink.url)
+            UIApplication.shared.open(self.createDeeplinkURL())
         }
+    }
+
+    private func createDeeplinkURL() -> URL {
+        let urlString = Link.storyDeepLink.url.absoluteString + "?source_application=\(facebookAppID)"
+        return URL(string: urlString)!
     }
 }
